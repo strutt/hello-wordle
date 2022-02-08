@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from constants import GUESSES
 from wordle import LetterFeedback
-from strategy import Strategy
+from strategies.strategy import Strategy
 
 def _zero():
     return 0
@@ -60,23 +60,15 @@ class FilterStrategy(Strategy):
     """
     Shorten a candidate list of words based on feedback from the
     wordle game.
+
+    Derived strategies should override the `next_guess` function.
+
+    The default implementation is extremely stupid and just choses the
+    first word in the list.
     """
 
-    def next_guess(self, candidate_words):
-        counts = [defaultdict(_zero) for _ in range(5)]
-        for word in candidate_words:
-            for i, char in enumerate(word):
-                counts[i][char] = counts[i][char] + 1
-        word_scores = {}
-        for word in candidate_words:
-            score = 0
-            for i, char in enumerate(word):
-                score = score + counts[i][char]
-            word_scores[word] = score
-        best_score = max(word_scores.values())
-        for word, score in word_scores.items():
-            if score == best_score:
-                return word
+    def next_guess(self, candidate_words, previous_guesses):
+        return candidate_words[0]
 
     def __init__(self, candidate_words = None):
         if candidate_words is None:
@@ -86,8 +78,10 @@ class FilterStrategy(Strategy):
 
     def play(self, wordle):
         candidate_words = self.candidate_words[:]
+        previous_guesses = []
         while not wordle.finished:
-            guess = self.next_guess(candidate_words)
+            guess = self.next_guess(candidate_words, previous_guesses)
+            previous_guesses.append(guess)
             feedback = wordle.guess(guess)
             candidate_words = list(filter(Filter(guess, feedback), candidate_words))
         return wordle.score
