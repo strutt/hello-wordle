@@ -11,8 +11,8 @@ class TerminalWordle(Wordle):
     
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, answer=None):
+        super().__init__(answer=answer)
         self._guesses = []
         while not self._finished:
             try:
