@@ -12981,3 +12981,5 @@ NON_SOLUTIONS = [
 GUESSES = sorted(SOLUTIONS + NON_SOLUTIONS)
 
 
+# # SOLUTIONS = [s for s in SOLUTIONS if s.startswith('a')]
+# GUESSES = SOLUTIONS[:]

@@ -3,7 +3,7 @@ Explore ideas...
 """
 from collections import defaultdict
 
-from constants import SOLUTIONS
+from constants import SOLUTIONS, GUESSES
 
 
 
@@ -45,4 +45,26 @@ def weird_words():
     words = [word for word in SOLUTIONS if get_max(word) >= _max]
     return words
 
-print(weird_words())
+# print(weird_words())
+print(len(SOLUTIONS))
+print(len(GUESSES))
+import sys
+sys.exit(1)
+
+"""
+There are 5 letters, each letter has 3 possible colours B, Y, G...
+
+Therefore there are 3*3*3*3*3 possible sets of feedback from any given guess
+
+
+"""
+num_sets_of_possible_feedback = pow(3, 5) # 243
+
+# A "perfect guess" would have equal probability of all sets of
+# feedback.  That guess would then split the solution space down by
+# 1/243.  Clearly this is not actually possible since there's only one
+# GGGGG possibility, which is the solution.
+
+# But pretending it is, if there's 2300-ish solutions, you'd go down
+# to 10 possibilites.  So, the good guesses have a wide distribution
+# of possible feedback. How do I quantify this width?

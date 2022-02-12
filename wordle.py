@@ -1,13 +1,11 @@
 import random
-from enum import Enum, auto
 
 from constants import GUESSES
 from constants import SOLUTIONS
+from feedback.feedback import get_feedback, LetterFeedback
 
-class LetterFeedback(Enum):
-    NOT_IN_WORD = auto()
-    ELSEWHERE = auto()
-    HERE = auto()
+
+
 
 class Wordle:
     """
@@ -34,7 +32,9 @@ class Wordle:
         self._win = False
         self._num_guesses = 0
 
+
     def guess(self, word) -> bool:
+        print(f"guess={word}, answer={self._answer}")
         if self._finished is True:
             raise RuntimeError("Game over already.")
 
@@ -44,20 +44,9 @@ class Wordle:
         self._num_guesses = self._num_guesses + 1
 
         # Feedback...
-        feedback = [LetterFeedback.NOT_IN_WORD for _ in word]
-        missing_letters = list(self._answer)
+        feedback = get_feedback(word, self._answer)
 
-        for i, (letter, answer_letter) in enumerate(zip(word, self._answer)):
-            if letter == answer_letter:
-                feedback[i] = LetterFeedback.HERE
-                missing_letters.remove(letter)
-
-        for i, letter in enumerate(word):
-            if feedback[i] == LetterFeedback.NOT_IN_WORD and letter in missing_letters:
-                feedback[i] = LetterFeedback.ELSEWHERE
-                missing_letters.remove(letter)
-
-        if feedback == [LetterFeedback.HERE for _ in self._answer]:
+        if list(feedback) == [LetterFeedback.HERE for _ in self._answer]:
             self._win = True
             self._finished = True
 

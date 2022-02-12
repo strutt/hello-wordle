@@ -20,11 +20,12 @@ class Strategy:
     """
     def evaluate(self, max_guesses=100):
         score = 0
-        solutions = RANDOM_SOLUTIONS
+        solutions = RANDOM_SOLUTIONS[:100]
         for solution in progressbar(solutions):
             game = Wordle(answer=solution, max_guesses=max_guesses)
             self.play(game)
             score = score + game.score
+            print(game.score)
         return score/len(solutions)
 
     def play(self, game) -> int:
